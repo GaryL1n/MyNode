@@ -3,14 +3,14 @@ const express = require("express");
 
 const app = express(); //建立web sever物件
 
-////view engine指定引勤 ejs不用require
+////view engine指定引勤 ejs不用require 都是靜態網頁
 app.set("view engine", "ejs");
 
-//use(接收所有HTML的方法) 通常在所有路由前面 只有404例外要放所最後面(陣列最後)
+//use(接收所有HTTP的方法) 通常在所有路由前面 只有404例外要放所最後面(陣列最後)
 app.use(express.static("public"));
 app.use("/bootstrap", express.static("node_modules/bootstrap/dist"));
 
-//路由 -->陣列組成
+//路由 -->陣列組成 get-->只接受用get的方式拜訪
 app.get("/", (req, res) => {
     // res.send(`<h2>閉嘴來做愛</h2>`);
     //EJS 不能用send
