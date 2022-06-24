@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+<persons>
+    <person>
+        <name>
+            <first>John</first>
+            <last>Su</last>
+        </name>
+        <age>30</age>
+        <data a="aaa" b="bbb" />
+    </person>
+        <person>
+        <name>
+            <first>Kin</first>
+            <last>Chen</last>
+        </name>
+        <age>27</age>
+        <data a="ccc" b="ddd" />
+    </person>
+    
+</persons>
