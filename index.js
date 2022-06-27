@@ -53,6 +53,11 @@ app.post('/try-uploads', upload.array('photos'), (req, res)=>{
     res.json(req.files);
 });
 
+// :之後為代名稱 ?為選擇性的 :自己取?  ?的可以不填 選擇性的優先放後面
+app.get('/try-params1/:action?/:id?', (req, res)=>{
+    res.json({code:1, params: req.params});
+});
+
 //路由 -->陣列組成 get-->只接受用get的方式拜訪
 app.get('/', (req, res) => {
     // res.send(`<h2>閉嘴來做愛</h2>`);
