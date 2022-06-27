@@ -6,17 +6,30 @@ const multer = require('multer');
 // const upload = multer({ dest: 'tmp-uploads' });
 // 載入自己寫好的檔案上傳模組
 const upload = require(__dirname + '/modules/upload-images');
+const session = require('express-session');
 
 const app = express(); //建立web sever物件
 
 ////view engine指定引勤 ejs不用require
 app.set('view engine', 'ejs');
+// 網域url區分大小寫 預設false是都轉成小寫
+app.set('case sensitive routing', true);
 
+//放在所有use最前面
+app.use(session({
+    saveUninitialized: false,
+    resave: false,
+    secret: 'sdgghdtjmjtudrujyjdtgfhjtjudktujk',
+}));
 //通用middleware 設定在所有路由前面
 //資料進來依照Content-Type做解析
 //extended解析方式
 app.use(express.urlencoded({ extended: false })); //設定成可以用POST
 app.use(express.json());
+app.use((req, res, next)=>{
+    res.locals.member = 'Gary Lin';
+    next();
+});
 
 //測試用 可以在try-qs?後面加東西 然後用req.query.加的東西 來取得
 app.get('/try-qs', (req, res) => {
@@ -57,6 +70,32 @@ app.post('/try-uploads', upload.array('photos'), (req, res)=>{
 app.get('/try-params1/:action?/:id?', (req, res)=>{
     res.json({code:1, params: req.params});
 });
+
+//以下兩種方式較少用
+app.get(/^\/hi\/?/i, (req, res)=>{
+    res.send({url: req.url});
+});
+app.get(['/aaa', '/bbb'], (req, res)=>{
+    res.send({url: req.url, code:'array'});
+});
+
+// 從其他地方引入路由 該引入的檔案的路由都掛在前綴路由/admins之下
+// app.use('/admins', require(__dirname + '/routes/admins'));
+// 也可以用以下寫法(比較少)
+//同個路由檔案掛在/admins還有根目錄底下
+const adminsRouter = require(__dirname + '/routes/admins');
+// prefix 前綴路徑
+app.use('/admins', adminsRouter);
+app.use(adminsRouter);
+
+app.get('/try-session', (req, res)=>{
+    req.session.my_test = req.session.my_test || 0;
+    req.session.my_test++;
+    res.json({
+        my_test: req.session.my_test,
+        session: req.session,
+    });
+})
 
 //路由 -->陣列組成 get-->只接受用get的方式拜訪
 app.get('/', (req, res) => {

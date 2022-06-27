@@ -16,5 +16,32 @@ req.files
 後端.json()是轉成json格式
 前端.json()是把json格式解析成原生類型
 
+send.()很多方式送出去 不嚴謹 -->丟物件的話會轉成json
+.render()是渲染
+------------------------------------
+# RESTful API
 
+# CRUD
+
+
+# 列表 (GET)
+/products
+/products?page=2
+/products?page=2&search=找東西
+
+# 單一商品 (GET)
+/products/:id
+
+# 新增商品 (POST)
+/products
+
+# 修改商品 (PUT)
+/products/:id
+
+# 刪除商品 (DELETE)
+/products/:id
+
+
+不要這樣用
+/products/:category_id/:product_id
 
