@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/fontawesome/css/all.css">
+    <title>Document</title>
+    <style>
+        .photo {
+            display: inline-block;
+            position: relative;
+            width: 200px;
+        }
+        .photo>img {
+            position: absolute;
+            width: 100%;
+        }
+
+        .photo>.fa-circle-minus {
+            position: absolute;
+            cursor: pointer;
+            right: 0;
+            top: 0;
+            font-size: 4vh;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <form name="form1" style="display: none">
+        <input type="file" multiple name="photos" accept="images/jpeg,images/png" />
+
+    </form>
+
+    <button onclick="document.form1.photos.click()">上傳照片</button>
+
+    <div id="photos">
+        
+        <div class="photo">
+            <img src="/imgs/6c0519f6e0e0d42e458daef829c74ae4.jpg" alt="">
+            <i class="fa-solid fa-circle-minus" onclick="delItem(event)"></i>
+        </div>
+    
+    </div>
+
+
+
+    <script>
+        const $photos = document.form1.photos;
+        const delItem = event=>{
+            const me = event.currentTarget;
+            me.closest('.photo').remove();
+
+        };
+
+        const photoUnitFunc = ({filename}) => `
+            <div class="photo" data-f="${filename}">
+                <img src="/imgs/${filename}" alt="">
+                <i class="fa-solid fa-circle-minus" onclick="delItem(event)"></i>
+            </div>`;
+
+        $photos.addEventListener('change', function(event){
+            const fd = new FormData(document.form1);
+            fetch('/try-uploads', {
+                method: 'POST',
+                body: fd,
+            })
+            .then(r=>r.json())
+            .then(data=>{
+                console.log(data);
+                document.querySelector('#photos').innerHTML += data.map(f=>photoUnitFunc(f)).join('');
+            })
+        });
+
+    </script>
+</body>
+</html>
