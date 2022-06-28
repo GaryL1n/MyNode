@@ -7,6 +7,11 @@ const multer = require('multer');
 // 載入自己寫好的檔案上傳模組
 const upload = require(__dirname + '/modules/upload-images');
 const session = require('express-session');
+const moment = require('moment-timezone');
+//session存到資料表
+const db = require(__dirname + '/modules/mysql-connect');
+const MysqlStore = require('express-mysql-session')(session);
+const sessionStore = new MysqlStore({}, db);
 
 const app = express(); //建立web sever物件
 
@@ -17,9 +22,18 @@ app.set('case sensitive routing', true);
 
 //放在所有use最前面
 app.use(session({
+    //新用戶沒有使用到session物件時不會建立session和發送cookie 否
     saveUninitialized: false,
+    //沒變更內容是否強制回存 否
     resave: false,
+    //加密用的字串 隨便打
     secret: 'sdgghdtjmjtudrujyjdtgfhjtjudktujk',
+    //存進資料表
+    store: sessionStore,
+    //設定cookie過期時間
+    cookie: {
+        maxAge: 1800000, // 30 min
+    }
 }));
 //通用middleware 設定在所有路由前面
 //資料進來依照Content-Type做解析
@@ -77,6 +91,33 @@ app.get(/^\/hi\/?/i, (req, res)=>{
 });
 app.get(['/aaa', '/bbb'], (req, res)=>{
     res.send({url: req.url, code:'array'});
+});
+
+app.get('/try-json', (req, res)=>{
+    // json格式require進來會自動jsonparse
+    // 以這範例來說變成陣列
+    const data = require(__dirname + '/data/data01');
+    console.log(data);
+    res.locals.rows = data;
+    res.render('try-json');
+});
+
+app.get('/try-moment', (req, res)=>{
+    // 設定格式
+    const fm = 'YYYY-MM-DD HH:mm:ss';
+    //現在時間
+    const m1 = moment();
+    //設定時間
+    const m2 = moment('2022-02-28');
+
+    res.json({
+        // 輸出
+        m1: m1.format(fm),
+        //設定時區再輸出
+        m1a: m1.tz('Europe/London').format(fm),
+        m2: m2.format(fm),
+        m2a: m2.tz('Europe/London').format(fm),
+    })
 });
 
 // 從其他地方引入路由 該引入的檔案的路由都掛在前綴路由/admins之下

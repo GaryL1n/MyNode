@@ -13,11 +13,13 @@ req.file
 req.files
 檔案類型用上面兩個 單一or多個
 ------------------------------------
-後端.json()是轉成json格式
-前端.json()是把json格式解析成原生類型
+後端res.json()是轉成json格式
+前端res.json()是把json格式解析成原生類型
 
-send.()很多方式送出去 不嚴謹 -->丟物件的話會轉成json
-.render()是渲染
+res.send()很多方式送出去 不嚴謹 -->丟物件的話會轉成json
+res.render()是渲染
+
+res.redirect() 頁面跳轉
 ------------------------------------
 # RESTful API
 
