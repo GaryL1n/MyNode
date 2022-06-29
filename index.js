@@ -138,6 +138,8 @@ app.get('/try-session', (req, res)=>{
     });
 })
 
+app.use('/address-book', require(__dirname + '/routes/address-book'));
+
 //路由 -->陣列組成 get-->只接受用get的方式拜訪
 app.get('/', (req, res) => {
     // res.send(`<h2>閉嘴來做愛</h2>`);

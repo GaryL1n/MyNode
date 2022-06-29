@@ -1,0 +1,102 @@
+<%- include('../parts/html-head') %> <%- include('../parts/navbar') %>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6">
+            <h3>新增資料</h3>
+            <form name="form1" onsubmit="sendForm(event)">
+                <div class="mb-3">
+                    <label for="" class="form-label"
+                        >name</label
+                    >
+                    <input
+                        type="text"
+                        class="form-control"
+                        name="name"
+                    />
+                    <div class="form-text"></div>
+                </div>
+                <div class="mb-3">
+                    <label for="" class="form-label"
+                        >email</label
+                    >
+                    <input
+                        type="text"
+                        class="form-control"
+                        name="email"
+                    />
+                    <div class="form-text"></div>
+                </div>
+                <div class="mb-3">
+                    <label for="" class="form-label"
+                        >mobile</label
+                    >
+                    <input
+                        type="text"
+                        class="form-control"
+                        name="mobile"
+                    />
+                    <div class="form-text"></div>
+                </div>
+                <div class="mb-3">
+                    <label for="" class="form-label"
+                        >birthday</label
+                    >
+                    <input
+                        type="date"
+                        class="form-control"
+                        name="birthday"
+                    />
+                    <div class="form-text"></div>
+                </div>
+                <div class="mb-3">
+                    <label for="" class="form-label"
+                        >address</label
+                    >
+                    <input
+                        type="text"
+                        class="form-control"
+                        name="address"
+                    />
+                    <div class="form-text"></div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<%- include('../parts/scripts') %>
+<script>
+    function sendForm(event){
+        event.preventDefault();
+
+        const fd = new FormData(document.form1);
+
+        const dataObj = {};
+        for(let i of fd.entries()){
+            console.log(i);
+
+            dataObj[i[0]] = i[1];
+        }
+        console.log(dataObj); // 轉換成物件
+
+        const usp = new URLSearchParams(fd);
+
+        // 轉換 urlencoded
+        console.log(usp.toString());
+
+
+        fetch('', {
+            method: 'POST',
+            body: fd
+        })
+        .then(r=>r.json())
+        .then(obj=>{
+            // console.log(obj)
+        })
+    }
+
+</script>
+<%- include('../parts/html-foot') %>

@@ -1,6 +1,5 @@
 req.query
 網域?後面加東西 然後用req.query.加的東西 來取得
-效能比params
 
 req.body
 表單資料用body
