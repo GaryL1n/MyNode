@@ -8,6 +8,13 @@ const multer = require('multer');
 const upload = require(__dirname + '/modules/upload-images');
 const session = require('express-session');
 const moment = require('moment-timezone');
+const axios = require('axios');
+
+const {
+    toDateString,
+    toDatetimeString,
+} = require(__dirname + '/modules/date-tools');
+
 //session存到資料表
 const db = require(__dirname + '/modules/mysql-connect');
 const MysqlStore = require('express-mysql-session')(session);
@@ -140,6 +147,15 @@ app.get('/try-session', (req, res)=>{
 
 app.use('/address-book', require(__dirname + '/routes/address-book'));
 
+app.get('/yahoo', async (req, res)=>{
+    axios.get('https://tw.yahoo.com/')
+    .then(function (response) {
+      // handle success
+        console.log(response);
+        res.send(response.data);
+    })
+});
+
 //路由 -->陣列組成 get-->只接受用get的方式拜訪
 app.get('/', (req, res) => {
     // res.send(`<h2>閉嘴來做愛</h2>`);
@@ -152,7 +168,10 @@ app.get('/', (req, res) => {
 // ------- 靜態文件 -----------
 app.use(express.static('public'));
 app.use('/bootstrap', express.static('node_modules/bootstrap/dist'));
+app.use("/joi", express.static("node_modules/joi/dist"));
 
+
+// ----------------------------
 //use 404例外要放所最後面(陣列最後)
 app.use((req, res) => {
     res.send(

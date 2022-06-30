@@ -5,6 +5,7 @@ const {
     toDatetimeString,
 } = require(__dirname + '/../modules/date-tools');
 const moment = require('moment-timezone');
+const Joi = require('joi');
 const upload = require(__dirname + '/../modules/upload-images')
 
 const router = express.Router(); // 建立 router 物件
@@ -103,7 +104,36 @@ router.get('/add', async (req, res)=>{
 });
 
 router.post('/add', upload.none(), async (req, res)=>{
-    res.json(req.body);
+    //後端檢查用
+    const schema = Joi.object({
+        //字串類型
+        name: Joi.string()
+        //最少3個字
+            .min(3)
+            //必填欄位
+            .required()
+            //欄位變數名稱用中文顯示
+            .label('姓名必填'),
+        email: Joi.string()
+            .email()
+            .required(),
+        mobile: Joi.string(),
+        //可以是任何類型
+        birthday: Joi.any(),
+        address: Joi.string(),
+    });
+
+    // 自訂訊息
+    // https://stackoverflow.com/questions/48720942/node-js-joi-how-to-display-a-custom-error-messages
+
+    console.log( schema.validate(req.body, {abortEarly: false}) );
+    const sql = "INSERT INTO `member`(`mem_name`, `mem_email`, `mem_mobile`, `mem_birthday`, `mem_address`, `mem_created_at`) VALUES (?, ?, ?, ?, ?, NOW())";
+    const {name, email, mobile, birthday, address} = req.body;
+    const [result] = await db.query(sql, [name, email, mobile, birthday, address]);
+
+    // 新增成功顯示在Preview的
+    // {"fieldCount":0,"affectedRows":1,"insertId":1113,"info":"","serverStatus":2,"warningStatus":0}
+    res.json(result);
 });
 
 //有連線資料庫的話都要async await
