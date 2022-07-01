@@ -99,11 +99,26 @@ const getListHandler = async (req, res)=>{
     return output;
 };
 
+router.use((req, res, next)=>{
+    /*
+    if(! req.session.admin){
+        return res.redirect('/');
+    }
+    */
+    next();
+});
+
 router.get('/add', async (req, res)=>{
+    if(! req.session.admin){
+        return res.redirect('/');
+    }
     res.render('address-book/add');
 });
 
 router.post('/add', upload.none(), async (req, res)=>{
+    if(! req.session.admin){
+        return res.json({success: false, error: '請先登入'});
+    }
     //後端檢查用
     const schema = Joi.object({
         //字串類型

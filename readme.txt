@@ -46,3 +46,7 @@ res.redirect() 頁面跳轉
 不要這樣用
 /products/:category_id/:product_id
 
+------------------------------------
+同源政策 (Same-origin policy)
+protocol, domain, port
+------------------------------------
