@@ -243,6 +243,6 @@ app.use((req, res) => {
 
 //偵聽
 app.listen(process.env.PORT, () => {
-    console.log(`server started: http://localhost:3600/`);
+    console.log(`server started: http://localhost:3600`);
     console.log({ NODE_ENV: process.env.NODE_ENV });
 });
